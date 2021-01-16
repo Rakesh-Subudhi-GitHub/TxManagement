@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+<!-- persistance-beans.xml -->
+
+<!-- XA DataSourse cfgs for oracle given by Atomikos -->
+<bean id="oraXADs" class="com.atomikos.jdbc.AtomikosDataSourceBean" init-method="init" destroy-method="close">
+		
+		<property name="uniqueResourceName" value="XAOra"/>
+		<property name="xaDataSourceClassName" value="oracle.jdbc.xa.client.OracleXADataSource"/>
+		<property name="xaProperties">
+				<props>
+						<prop key="databaseName">orcl</prop>
+						<prop key="URL">jdbc:oracle:thin:@localhost:1521:orcl</prop>
+						<prop key="user">rakesh</prop>
+						<prop key="password">devibhai</prop>
+				</props>
+		</property>
+		<property name="poolSize" value="10"/>
+		
+</bean>
+
+<!-- mysql or postgrace sql use then that code write here -->
+
+
+	<!-- jdbcTemplate class cfgs -->
+	<bean id="oracleTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+			<constructor-arg ref="oraXADs"/>
+	</bean>
+
+	<!-- DAO class cfgs -->
+		<context:component-scan base-package="com.rk.dao"/>
+
+</beans>

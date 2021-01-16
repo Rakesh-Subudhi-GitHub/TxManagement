@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans-4.3.xsd
+		http://www.springframework.org/schema/context https://www.springframework.org/schema/context/spring-context-4.3.xsd
+		http://www.springframework.org/schema/aop https://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+		http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx-4.3.xsd">
+
+  <import resource="service-beans.xml"/>
+  <import resource="persistance-beans.xml"/>
+  <import resource="aop-beans.xml"/>
+  
+   <!-- DataSource cfg -->
+   <bean id="hkDs" class="com.zaxxer.hikari.HikariDataSource">
+       <property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/>
+       <property name="jdbcUrl"  value="jdbc:oracle:thin:@localhost:1521:orcl"/>
+       <property name="username" value="rakesh"/>
+       <property name="password" value="devibhai"/>
+       <property name="minimumIdle" value="10"/>
+       <property name="maximumPoolSize" value="100"/>
+   </bean>
+   
+   <!-- JdbcTemplate cfg -->
+   <bean id="jt"  class="org.springframework.jdbc.core.JdbcTemplate">
+       <constructor-arg ref="hkDs"/>
+   </bean>
+   
+   <context:component-scan base-package="com.rk.dao,com.rk.service"/>
+   
+   <!-- cfgs TxMgmr -->
+	<bean id="dsTxMgmr" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+	<constructor-arg ref="hkDs"/>
+	</bean>
+	
+	<tx:annotation-driven transaction-manager="dsTxMgmr"/>
+</beans>
